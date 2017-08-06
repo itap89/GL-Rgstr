@@ -8,6 +8,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import registration_check.registration_check.excelUtil.ExcelUtils;
+import registration_check.registration_check.model.Stuff;
 import registration_check.registration_check.pages.LoginPage;
 import registration_check.registration_check.pages.StudentListPage;
 
@@ -22,18 +23,19 @@ public class App {
 		Map<String, String> communionMap = new HashMap<String, String>();
 		Map<String, String> confirmationMap = new HashMap<String, String>();;
 		
+		Stuff stuff = ExcelUtils.getStuff();
 		ExcelUtils.setCommunionMap(communionMap);
 		
 		WebDriver webDriver = chromeDriver();
 		LoginPage loginPage = new LoginPage(webDriver);
 		StudentListPage studentListPage = new StudentListPage(webDriver);
 		
-		webDriver.get(Constants.DB_URL);
-		loginPage.login("", "");
+		webDriver.get(stuff.getBazz());
+		loginPage.login(stuff.getBar(), stuff.getFoo());
 		
 		int i = 0;
 		for(String curStudentName : communionMap.keySet()) {
-			if(i == 3) {
+			if(i == 2) {
 				break;
 			}
 			

@@ -33,10 +33,13 @@ public class StudentListPage extends CommonPage {
 	@FindBy(xpath = "//div[contains(@id, 'students_s_list_actionbar_container')]//div[@title = 'Save (Ctrl+S)']")
 	private WebElement saveButton;
 	
+	@FindBy(xpath = "//div[contains(@id, 'students_s_list_actionbar_container')]//div[@title = 'Cancel (Esc)']")
+	private WebElement cancelButton;
+	
 	@FindBy(xpath = "//input[contains(@id, 'First_Communion_DateTextBox_AccessControl')]")
 	private WebElement studentFCDateInputBox;
 	
-	@FindBy(xpath = "input[contains(@id, 'First_Communion_ParishTextBox_AccessControl')]")
+	@FindBy(xpath = "//input[contains(@id, 'First_Communion_ParishTextBox_AccessControl')]")
 	private WebElement studentFCParishInputBox;
 		
 	public StudentListPage(WebDriver webDriver) {
@@ -62,16 +65,9 @@ public class StudentListPage extends CommonPage {
 		
 		for(int i = 0; i < studentOptions.size(); i++) {
 			
-			System.out.println(studentOptions.get(i)
-					.findElement(By.xpath(Constants.PATH_STUDENT_OPTION_TO_STUDENT_NAME_LABEL)).getText());
-			
 			if( (studentOptions.get(i)
 					.findElement(By.xpath(Constants.PATH_STUDENT_OPTION_TO_STUDENT_NAME_LABEL)).getText().equals(studentName)) ) {
 				
-				System.out.println("STUDENT NAMES MATCH");
-				System.out.println("Expected parent names: " + parentNames);
-				System.out.println("Actual parent names: " + parentNamesLink.getText());
-				System.out.println("^^^^^^^^^^^^^^^^");
 				if(parentNamesLink.getText().equals(parentNames)) {
 					return true;
 				}
@@ -85,40 +81,42 @@ public class StudentListPage extends CommonPage {
 	 * Enter first communion information for currently selected student in DOM
 	 */
 	public void enterFCInfo(String studentName) {
-		boolean currentlyEditing = false;
+		boolean edited = false;
+		
+		clickElementWithJavascript(editButton);		
+		
 		waitForVisibilityOfElement(studentFCDateInputBox);
 		waitForVisibilityOfElement(studentFCParishInputBox);
 		
-		System.out.println("***** START *****");
+		waitForTime(1000);
+		
 		System.out.println(studentFCDateInputBox.findElement(By.xpath(Constants.PATH_SACRAMENT_FOLLOWING_SIBILING))
-				.getText());
-		System.out.println(studentFCDateInputBox.findElement(By.xpath(Constants.PATH_SACRAMENT_FOLLOWING_SIBILING))
-				.getText().length());
-		System.out.println("***** END *****");
+				.getAttribute("title"));
 		
 		if( studentFCDateInputBox.findElement(By.xpath(Constants.PATH_SACRAMENT_FOLLOWING_SIBILING))
-				.getText().length() == 0 ) {
+				.getAttribute("title").length() == 0 ) {
 			
-			clickElementWithJavascript(editButton);		
 			enterTextInElement(studentFCDateInputBox, Constants.COMM_DATE);
-			currentlyEditing = true;
+			edited = true;
 		}
 		
 		if( studentFCParishInputBox.findElement(By.xpath(Constants.PATH_SACRAMENT_FOLLOWING_SIBILING))
-				.getText().length() == 0 ) {
+				.getAttribute("title").length() == 0 ) {
 			
-			if(!currentlyEditing) {
+			if(!edited) {
 				clickElementWithJavascript(editButton);		
 			}
 			enterTextInElement(studentFCParishInputBox, Constants.PARISH);
-			currentlyEditing = true;
+			edited = true;
 		}
 		
-		if(currentlyEditing) {
+		if(edited) {
 			System.out.println(studentName);
 			System.out.println("****");
 			clickElementWithJavascript(saveButton);
-		}	
+		} else {
+			clickElementWithJavascript(cancelButton);
+		}
 		
 	}
 

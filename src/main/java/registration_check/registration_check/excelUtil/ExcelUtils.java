@@ -9,8 +9,31 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import registration_check.registration_check.Constants;
+import registration_check.registration_check.model.Stuff;
 
 public class ExcelUtils {
+	
+	public static Stuff getStuff() {
+		Stuff stuff = new Stuff();
+		// FC Student Database 2017
+		try {
+			
+			XSSFWorkbook wb = new XSSFWorkbook(new File(Constants.PATH_STUFF_EXCEL));
+			XSSFSheet sheet = wb.getSheetAt(0);
+			
+			int numCols = sheet.getRow(1).getPhysicalNumberOfCells();
+			for(int j = 0; j < numCols; j++) {
+				stuff.setBar( sheet.getRow(1).getCell(0).getStringCellValue() );
+				stuff.setFoo( sheet.getRow(1).getCell(1).getStringCellValue() );
+				stuff.setBazz( sheet.getRow(1).getCell(2).getStringCellValue() );
+			}
+			wb.close();
+			
+		} catch(Exception e) {
+			
+		}
+		return stuff;
+	}
 
 	/**
 	 * Student name : Parent names
@@ -32,24 +55,25 @@ public class ExcelUtils {
 			int studentNameCol = -1;
 			int familyCol = -1;
 			
-			// Go through all rows to find indexes of student name and family display columns
+			// Go through all rows to find where data starts
 			for (int i = 0; i < numRows; i++) {
-				
+				// found both student name and family display columns
 				if(studentNameCol != -1 && familyCol != -1) {
 					break;
 				}
+				
 				curRow = sheet.getRow(i);
 				if (curRow != null) {
-					
+					// go through columns to find indexes of student and family names
 					int numCols = sheet.getRow(i).getPhysicalNumberOfCells();
 					for(int j = 0; j < numCols; j++) {
 						curCell = curRow.getCell( j );
 						
 						if(curCell != null) {
-							
-							if(curCell.getStringCellValue().equals("Student Name")) {
+							// check if found student name or family name columns
+							if(curCell.getStringCellValue().equals(Constants.STUDENT_NAME_COL)) {
 								studentNameCol = j;
-							} else if(curCell.getStringCellValue().equals("Family Display Name")) {
+							} else if(curCell.getStringCellValue().equals(Constants.FAMILY_NAME_COL)) {
 								familyCol = j;
 							}
 							
