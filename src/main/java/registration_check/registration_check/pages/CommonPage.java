@@ -1,5 +1,6 @@
 package registration_check.registration_check.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -106,6 +107,15 @@ public class CommonPage {
 	 */
 	public void waitForVisibilityOfElement(WebElement element) {
 		waitFor(ExpectedConditions.visibilityOf(element));
+	}
+	
+	/**
+	 * Wait for given webelement to be visible
+	 * 
+	 * @param element
+	 */
+	public void waitForPresenceOfElement(WebElement element) {
+		waitFor(ExpectedConditions.presenceOfNestedElementLocatedBy(element, By.xpath(".")));
 	}
 	
 	/**

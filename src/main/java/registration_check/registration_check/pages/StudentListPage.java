@@ -57,14 +57,17 @@ public class StudentListPage extends CommonPage {
 	 */
 	public boolean filterByStudentName(String studentName, String parentNames) {
 		clickElementWithJavascript(studentCategoryOption);
+		waitForTime(1000);
 		clearTextInElement(studentFilterInputBox);
 		enterTextInElement(studentFilterInputBox, studentName);
 		waitForTime(250);
 		clickElementWithJavascript(searchButton);
 		waitForTime(1000);
 		
+		System.out.println("Student options: "+ studentOptions.size());
+		
 		for(int i = 0; i < studentOptions.size(); i++) {
-			
+			clickElementWithJavascript(studentOptions.get(i));
 			if( (studentOptions.get(i)
 					.findElement(By.xpath(Constants.PATH_STUDENT_OPTION_TO_STUDENT_NAME_LABEL)).getText().equals(studentName)) ) {
 				
@@ -82,20 +85,17 @@ public class StudentListPage extends CommonPage {
 	 */
 	public void enterFCInfo(String studentName) {
 		boolean edited = false;
-		
-		clickElementWithJavascript(editButton);		
-		
-		waitForVisibilityOfElement(studentFCDateInputBox);
-		waitForVisibilityOfElement(studentFCParishInputBox);
-		
-		waitForTime(1000);
+				
+		waitForPresenceOfElement(studentFCDateInputBox);
+		waitForPresenceOfElement(studentFCParishInputBox);
 		
 		System.out.println(studentFCDateInputBox.findElement(By.xpath(Constants.PATH_SACRAMENT_FOLLOWING_SIBILING))
 				.getAttribute("title"));
 		
 		if( studentFCDateInputBox.findElement(By.xpath(Constants.PATH_SACRAMENT_FOLLOWING_SIBILING))
 				.getAttribute("title").length() == 0 ) {
-			
+			clickElementWithJavascript(editButton);		
+			waitForTime(1000);
 			enterTextInElement(studentFCDateInputBox, Constants.COMM_DATE);
 			edited = true;
 		}
@@ -104,7 +104,8 @@ public class StudentListPage extends CommonPage {
 				.getAttribute("title").length() == 0 ) {
 			
 			if(!edited) {
-				clickElementWithJavascript(editButton);		
+				clickElementWithJavascript(editButton);
+				waitForTime(1000);
 			}
 			enterTextInElement(studentFCParishInputBox, Constants.PARISH);
 			edited = true;
@@ -114,10 +115,8 @@ public class StudentListPage extends CommonPage {
 			System.out.println(studentName);
 			System.out.println("****");
 			clickElementWithJavascript(saveButton);
-		} else {
-			clickElementWithJavascript(cancelButton);
+			waitForTime(1000);
 		}
-		
 	}
 
 }

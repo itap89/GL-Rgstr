@@ -35,7 +35,7 @@ public class App {
 		
 		int i = 0;
 		for(String curStudentName : communionMap.keySet()) {
-			if(i == 2) {
+			if(i == 8) {
 				break;
 			}
 			
